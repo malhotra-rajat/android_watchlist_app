@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.watchlist.databinding.WatchlistItemBinding
 import com.example.watchlist.feature.datamodel.Quote
 
-class WatchlistAdapter(private var mQuotes: ArrayList<Quote>) :
+class WatchlistAdapter() :
     RecyclerView.Adapter<WatchlistAdapter.WatchlistItemViewHolder>() {
 
-    var deleteIconVisible = false;
+    private var quotesList = ArrayList<Quote>()
+    var deleteIconVisible = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WatchlistItemViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -19,29 +20,26 @@ class WatchlistAdapter(private var mQuotes: ArrayList<Quote>) :
     }
 
     override fun onBindViewHolder(holder: WatchlistItemViewHolder, position: Int) {
-        holder.bind(mQuotes[position])
+        holder.bind(quotesList[position])
     }
 
     override fun getItemCount(): Int {
-        return mQuotes.size
+        return quotesList.size
     }
 
-
-    fun updateData(quotes: ArrayList<Quote>) {
-        quotes.clear()
-        quotes.addAll(quotes)
+    fun updateData(mQuotesMap: LinkedHashMap<String, Quote>) {
+        quotesList.clear()
+        quotesList.addAll(mQuotesMap.values)
         notifyDataSetChanged()
     }
-
 
     inner class WatchlistItemViewHolder(private val mBinding: WatchlistItemBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
 
         init {
-//            mBinding.addButton.setOnClickListener(insert())
             mBinding.btnDelete.setOnClickListener {
                 layoutPosition.let {
-                    mQuotes.removeAt(it)
+                    quotesList.removeAt(it)
                     notifyItemRemoved(it)
                 }
             }
@@ -52,14 +50,6 @@ class WatchlistAdapter(private var mQuotes: ArrayList<Quote>) :
             mBinding.deleteIconVisible = deleteIconVisible
             mBinding.executePendingBindings()
         }
-/*
-    private fun insert(): (View) -> Unit = {
-        layoutPosition.also { currentPosition ->
-            items.add(currentPosition, uniqueString(string))
-            notifyDataSetChanged()
-        }
-    }*/
-
     }
 
 }

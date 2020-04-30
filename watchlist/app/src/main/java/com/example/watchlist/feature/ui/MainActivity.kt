@@ -18,21 +18,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-
     private val viewModel: MainViewModel by viewModels()
 
     private val watchlistAdapter by lazy {
-        return@lazy WatchlistAdapter(viewModel.watchlist)
+        return@lazy WatchlistAdapter()
     }
 
     private val mBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    var watchListObserver: Observer<ArrayList<Quote>> =
-        Observer<ArrayList<Quote>> {
-            watchlistAdapter.notifyDataSetChanged()
-        }
+    var watchListObserver = Observer<LinkedHashMap<String, Quote>> {
+        watchlistAdapter.updateData(it)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         initUI()
         observeViewModel()
     }
-
 
     private fun initUI() {
         val linearLayoutManager = LinearLayoutManager(this)
@@ -58,11 +55,9 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(dividerItemDecoration)
         }
 
-
         val userNames = arrayOf("My first List", "+ Add new watchlist")
-        val arrayadapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, userNames)
-        mBinding.spinnerAdapter = arrayadapter
-
+        val arrayAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, userNames)
+        mBinding.spinnerAdapter = arrayAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -81,9 +76,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun observeViewModel() {
-        viewModel.watchlistLiveData.observe(this, watchListObserver)
+        viewModel.quotesLiveData.observe(this, watchListObserver)
 
 
         viewModel.error.observe(this, Observer {
@@ -100,7 +94,4 @@ class MainActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
-
-
-
 }
