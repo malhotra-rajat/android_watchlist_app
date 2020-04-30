@@ -7,11 +7,15 @@
 
         <import type="android.view.View" />
 
-        <import type="com.example.watchlist.common.network.State" />
+        <import type="com.example.watchlist.common.ui.State" />
 
         <variable
             name="viewModel"
             type="com.example.watchlist.feature.ui.MainViewModel" />
+
+        <variable
+            name="spinnerAdapter"
+            type="android.widget.ArrayAdapter" />
 
     </data>
 
@@ -21,18 +25,56 @@
         tools:context=".MainActivity">
 
 
-        <ProgressBar
-            android:id="@+id/progressBar"
+        <Spinner
+            android:id="@+id/spinner_watchlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="@dimen/defaultPadding"
+            app:adapter="@{spinnerAdapter}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/darkGray"
+            app:layout_constraintTop_toBottomOf="@id/spinner_watchlist" />
+
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/defaultMargin"
             android:indeterminate="true"
             android:visibility="@{viewModel.state == State.Loading ? View.VISIBLE : View.GONE}"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_watchlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.state == State.Done ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner_watchlist" />
+
+
+        <Button
+            android:id="@+id/btn_delete_watchlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/defaultMargin"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="@{viewModel.state == State.Done ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/rv_watchlist"
+            android:text="@string/delete_watchlist"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

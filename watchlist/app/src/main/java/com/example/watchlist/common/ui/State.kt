@@ -1,4 +1,4 @@
-package com.example.watchlist.common.network
+package com.example.watchlist.common.ui
 
 enum class State {
     Loading,

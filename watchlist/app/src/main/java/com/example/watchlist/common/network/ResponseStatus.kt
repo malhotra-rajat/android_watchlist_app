@@ -1,6 +1,6 @@
 package com.example.watchlist.common.network
 
-enum class Status {
+enum class ResponseStatus {
     SUCCESS,
     ERROR
 }

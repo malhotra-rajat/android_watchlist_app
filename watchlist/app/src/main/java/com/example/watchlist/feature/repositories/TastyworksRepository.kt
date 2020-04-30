@@ -3,23 +3,22 @@ package com.example.watchlist.feature.repositories
 import com.example.watchlist.common.network.NetworkManager
 import com.example.watchlist.common.network.Resource
 import com.example.watchlist.common.network.ResponseHandler
-import com.example.watchlist.feature.datamodel.Quote
-import com.example.watchlist.feature.network.IEXApi
-import java.lang.Exception
+import com.example.watchlist.feature.datamodel.SymbolSearchResponse
+import com.example.watchlist.feature.network.TastyworksApi
 
-class IEXRepository() {
+class TastyworksRepository() {
+
 
     private val responseHandler = ResponseHandler()
 
-    private val iexApi = NetworkManager.iexClient.create(IEXApi::class.java)
+    private val tastyworksApi = NetworkManager.tastyWorksClient.create(TastyworksApi::class.java)
 
-    suspend fun getQuote(symbol: String): Resource<Quote> {
+    suspend fun searchSymbol(query: String): Resource<SymbolSearchResponse> {
         return try {
-            val response = iexApi.getQuote(symbol)
+            val response = tastyworksApi.searchSymbol(query)
             return responseHandler.handleSuccess(response)
         } catch (e: Exception) {
             responseHandler.handleException(e)
-
         }
     }
 }
