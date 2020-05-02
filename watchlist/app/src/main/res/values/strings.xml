@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Watchlists</string>
-    <string name="delete_watchlist">Delete Watchlist</string>
-    <string name="edit">Edit</string>
-    <string name="cancel">Cancel</string>
+    <string name="delete_watchlist">Delete watchlist</string>
+    <string name="edit_watchlist">Edit watchlist</string>
+    <string name="add_watchlist">Add watchlist</string>
+    <string name="enter_watchlist_name">Enter watchlist name</string>
+    <string name="enter_symbol">Enter symbol</string>
+    <string name="add_symbol">Add Symbol</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui
+package com.example.watchlist.feature.ui.watchlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

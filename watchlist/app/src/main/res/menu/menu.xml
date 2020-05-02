@@ -3,8 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_edit"
-        android:icon="@drawable/ic_edit_white_24dp"
-        android:title="@string/edit"
-        app:showAsAction="always" />
+        android:id="@+id/action_add_watchlist"
+        android:title="@string/add_watchlist"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit_watchlist"
+        android:title="@string/edit_watchlist"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete_watchlist"
+        android:title="@string/delete_watchlist"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_symbol"
+        android:title="@string/add_symbol"
+        app:showAsAction="never" />
 </menu>

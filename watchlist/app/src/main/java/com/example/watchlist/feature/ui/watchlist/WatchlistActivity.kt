@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui
+package com.example.watchlist.feature.ui.watchlist
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,28 +8,38 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchlist.R
-import com.example.watchlist.databinding.ActivityMainBinding
+import com.example.watchlist.databinding.ActivityWatchlistBinding
 import com.example.watchlist.feature.datamodel.Quote
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.watchlist.feature.ui.showAddSymbolDialog
+import com.example.watchlist.feature.ui.showAddWatchlistDialog
+import kotlinx.android.synthetic.main.activity_watchlist.*
 
 
-class MainActivity : AppCompatActivity() {
+class WatchlistActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: WatchlistViewModel by viewModels()
 
     private val watchlistAdapter by lazy {
         return@lazy WatchlistAdapter()
     }
 
     private val mBinding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
+        ActivityWatchlistBinding.inflate(layoutInflater)
     }
 
     var watchListObserver = Observer<LinkedHashMap<String, Quote>> {
         watchlistAdapter.updateData(it)
+    }
+
+    private val autoSuggestAdapter by lazy {
+        return@lazy AutoSuggestAdapter(
+            this,
+            R.layout.support_simple_spinner_dropdown_item
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(dividerItemDecoration)
         }
 
-        val userNames = arrayOf("My first List", "+ Add new watchlist")
+        val userNames = arrayOf("My first List")
         val arrayAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, userNames)
         mBinding.spinnerAdapter = arrayAdapter
     }
@@ -67,17 +77,38 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_edit -> {
+            R.id.action_add_watchlist -> {
+                showAddWatchlistDialog(this)
+
+                true
+            }
+
+            R.id.action_edit_watchlist -> {
                 watchlistAdapter.deleteIconVisible = true
                 watchlistAdapter.notifyDataSetChanged()
                 true
             }
+            R.id.action_delete_watchlist -> {
+                //delete from db
+                true
+            }
+
+            R.id.action_add_symbol -> {
+                showAddSymbolDialog(this, lifecycleScope, viewModel, autoSuggestAdapter)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     private fun observeViewModel() {
         viewModel.quotesLiveData.observe(this, watchListObserver)
+
+        viewModel.searchResultsLiveData.observe(this, Observer { items ->
+            autoSuggestAdapter.setData(items.map {it.symbol.toString()});
+            autoSuggestAdapter.notifyDataSetChanged();
+        })
 
 
         viewModel.error.observe(this, Observer {
