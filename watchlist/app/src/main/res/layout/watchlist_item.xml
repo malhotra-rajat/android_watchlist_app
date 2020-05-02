@@ -10,11 +10,7 @@
 
         <variable
             name="quote"
-            type="com.example.watchlist.feature.datamodel.Quote" />
-
-        <variable
-            name="deleteIconVisible"
-            type="Boolean" />
+            type="com.example.watchlist.feature.datamodels.api.Quote" />
 
     </data>
 
@@ -22,14 +18,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/defaultPadding">
-
+        android:padding="@dimen/defaultPadding"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/stock_symbol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{quote.symbol}"
+            android:visibility="@{quote.symbol != null ? View.VISIBLE : View.GONE}"
             android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +37,7 @@
             android:id="@+id/bid_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="@{quote.iexAskPrice != null ? View.VISIBLE : View.GONE}"
             android:text="@{`Bid Price: $` + quote.iexBidPrice}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stock_symbol"
@@ -50,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{`Ask Price: $` + quote.iexAskPrice}"
+            android:visibility="@{quote.iexAskPrice != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bid_price"
             tools:text="Ask price: $222.22" />
@@ -59,21 +58,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{`Latest Price: $` + quote.latestPrice}"
+            android:visibility="@{quote.latestPrice != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ask_price"
             tools:text="Latest price: $222.22" />
-
-
-        <ImageView
-            android:id="@+id/btn_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_delete_black_24dp"
-            android:visibility="@{deleteIconVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/stock_symbol"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/stock_symbol" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,6 @@ package com.example.watchlist.feature.ui.watchlist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,18 +12,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchlist.R
 import com.example.watchlist.databinding.ActivityWatchlistBinding
-import com.example.watchlist.feature.datamodel.Quote
+import com.example.watchlist.feature.datamodels.api.Quote
+import com.example.watchlist.feature.datamodels.db.Watchlist
 import com.example.watchlist.feature.ui.showAddSymbolDialog
 import com.example.watchlist.feature.ui.showAddWatchlistDialog
 import kotlinx.android.synthetic.main.activity_watchlist.*
-
 
 class WatchlistActivity : AppCompatActivity() {
 
     private val viewModel: WatchlistViewModel by viewModels()
 
     private val watchlistAdapter by lazy {
-        return@lazy WatchlistAdapter()
+        return@lazy WatchlistAdapter(viewModel)
     }
 
     private val mBinding by lazy {
@@ -40,6 +39,10 @@ class WatchlistActivity : AppCompatActivity() {
             this,
             R.layout.support_simple_spinner_dropdown_item
         )
+    }
+
+    private val watchlistSpinnerAdapter by lazy {
+        return@lazy WatchlistSpinnerAdapter(this, R.layout.support_simple_spinner_dropdown_item)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,11 +68,7 @@ class WatchlistActivity : AppCompatActivity() {
             addItemDecoration(dividerItemDecoration)
         }
 
-        val userNames = arrayOf("My first List")
-        val arrayAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, userNames)
-        mBinding.spinnerAdapter = arrayAdapter
 
-        supportFragmentManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,18 +79,14 @@ class WatchlistActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_add_watchlist -> {
-                showAddWatchlistDialog(this)
-
+                showAddWatchlistDialog(this, viewModel)
                 true
             }
 
-            R.id.action_edit_watchlist -> {
-                watchlistAdapter.deleteIconVisible = true
-                watchlistAdapter.notifyDataSetChanged()
-                true
-            }
             R.id.action_delete_watchlist -> {
-                //delete from db
+                val watchlist =
+                    watchlistSpinnerAdapter.getItem(spinner_watchlist.selectedItemPosition)
+                watchlist?.let { viewModel.deleteWatchlist(it) }
                 true
             }
 
@@ -104,11 +99,12 @@ class WatchlistActivity : AppCompatActivity() {
         }
     }
 
+
     private fun observeViewModel() {
         viewModel.quotesMapLiveData.observe(this, watchListObserver)
 
         viewModel.searchResultsLiveData.observe(this, Observer { items ->
-            autoSuggestAdapter.setData(items.map {it.symbol.toString()});
+            autoSuggestAdapter.setData(items.map { it.symbol.toString() });
             autoSuggestAdapter.notifyDataSetChanged();
         })
 
@@ -116,15 +112,10 @@ class WatchlistActivity : AppCompatActivity() {
         viewModel.error.observe(this, Observer {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
-    }
 
-    override fun onBackPressed() {
-        if (watchlistAdapter.deleteIconVisible) {
-            watchlistAdapter.deleteIconVisible = false
-            watchlistAdapter.notifyDataSetChanged()
-        }
-        else {
-            super.onBackPressed()
-        }
+        mBinding.spinnerAdapter = watchlistSpinnerAdapter
+        viewModel.watchlists.observe(this, Observer {
+            watchlistSpinnerAdapter.updateData(it as ArrayList<Watchlist>)
+        })
     }
 }

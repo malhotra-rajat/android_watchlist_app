@@ -10,7 +10,7 @@ object NetworkManager {
     private const val TASTYWORKS_BASE_URL = "https://api.tastyworks.com"
     private const val IEX_CLOUD_BASE_URL = "https://cloud.iexapis.com"
 
-    const val iexAuthToken = "sk_8430ddcc5baa4476853c1211084987cc"
+    const val iexAuthToken = "sk_e9b48de93a884fb58539fb87e1eea738"
 
     private val gsonFactory = GsonConverterFactory.create()
     private val twOkHttpClient = OkHttpClient()

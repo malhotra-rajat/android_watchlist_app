@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.datamodel
+package com.example.watchlist.feature.datamodels.api
 
 data class Quote (
     val symbol: String? = null,

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/et_add"
+        android:id="@+id/et_watchlist_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"

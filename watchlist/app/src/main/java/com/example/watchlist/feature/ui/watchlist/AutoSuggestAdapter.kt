@@ -24,12 +24,6 @@ class AutoSuggestAdapter(context: Context, resource: Int) :
         return mlistData[position]
     }
 
-    //
-//     * Used to Return the full object directly from adapter.
-//     *
-//     * @param position
-//     * @return
-//
     fun getObject(position: Int): String {
         return mlistData[position]
     }

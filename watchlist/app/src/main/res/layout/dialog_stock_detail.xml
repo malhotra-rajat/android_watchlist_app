@@ -14,7 +14,7 @@
 
         <variable
             name="quote"
-            type="com.example.watchlist.feature.datamodel.Quote" />
+            type="com.example.watchlist.feature.datamodels.api.Quote" />
 
         <variable
             name="viewModel"
@@ -30,10 +30,30 @@
         android:padding="@dimen/defaultPadding">
 
         <include
+            android:id="@+id/watchlist_item"
             layout="@layout/watchlist_item"
             bind:deleteIconVisible="false"
             bind:quote="@{quote}" />
 
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/stock_chart"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="@dimen/defaultMargin"
+            android:visibility="@{viewModel.chartLoadingState == State.Done ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@id/watchlist_item"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/defaultMargin"
+            android:indeterminate="true"
+            android:visibility="@{viewModel.chartLoadingState == State.Loading ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/watchlist_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

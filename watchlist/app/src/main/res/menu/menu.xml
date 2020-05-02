@@ -8,11 +8,6 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_edit_watchlist"
-        android:title="@string/edit_watchlist"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_delete_watchlist"
         android:title="@string/delete_watchlist"
         app:showAsAction="never" />

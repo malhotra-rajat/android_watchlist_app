@@ -3,11 +3,10 @@ package com.example.watchlist.feature.repositories
 import com.example.watchlist.common.network.NetworkManager
 import com.example.watchlist.common.network.Resource
 import com.example.watchlist.common.network.ResponseHandler
-import com.example.watchlist.feature.datamodel.SymbolSearchResponse
+import com.example.watchlist.feature.datamodels.api.SymbolSearchResponse
 import com.example.watchlist.feature.network.TastyworksApi
 
 class TastyworksRepository() {
-
 
     private val responseHandler = ResponseHandler()
 

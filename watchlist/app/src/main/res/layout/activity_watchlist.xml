@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/defaultMargin"
             android:indeterminate="true"
-            android:visibility="@{viewModel.state == State.Loading ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.watchlistLoadingState == State.Loading ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -75,12 +75,9 @@
                     android:id="@+id/rv_watchlist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{viewModel.state == State.Done ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.watchlistLoadingState == State.Done ? View.VISIBLE : View.GONE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
