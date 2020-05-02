@@ -31,7 +31,7 @@ class WatchlistActivity : AppCompatActivity() {
         ActivityWatchlistBinding.inflate(layoutInflater)
     }
 
-    var watchListObserver = Observer<LinkedHashMap<String, Quote>> {
+    private var watchListObserver = Observer<LinkedHashMap<String, Quote>> {
         watchlistAdapter.updateData(it)
     }
 
@@ -68,6 +68,8 @@ class WatchlistActivity : AppCompatActivity() {
         val userNames = arrayOf("My first List")
         val arrayAdapter = ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, userNames)
         mBinding.spinnerAdapter = arrayAdapter
+
+        supportFragmentManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -103,7 +105,7 @@ class WatchlistActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.quotesLiveData.observe(this, watchListObserver)
+        viewModel.quotesMapLiveData.observe(this, watchListObserver)
 
         viewModel.searchResultsLiveData.observe(this, Observer { items ->
             autoSuggestAdapter.setData(items.map {it.symbol.toString()});

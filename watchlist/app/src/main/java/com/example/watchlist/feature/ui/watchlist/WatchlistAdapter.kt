@@ -1,12 +1,16 @@
 package com.example.watchlist.feature.ui.watchlist
 
+import android.R.attr.fragment
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.watchlist.databinding.WatchlistItemBinding
 import com.example.watchlist.feature.datamodel.Quote
 
-class WatchlistAdapter() :
+
+class WatchlistAdapter :
     RecyclerView.Adapter<WatchlistAdapter.WatchlistItemViewHolder>() {
 
     private var quotesList = ArrayList<Quote>()
@@ -36,12 +40,30 @@ class WatchlistAdapter() :
     inner class WatchlistItemViewHolder(private val mBinding: WatchlistItemBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
 
+        val activity = mBinding.root.context as AppCompatActivity
+
         init {
             mBinding.btnDelete.setOnClickListener {
                 layoutPosition.let {
                     quotesList.removeAt(it)
                     notifyItemRemoved(it)
                 }
+            }
+
+            mBinding.root.setOnClickListener{
+
+                val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+                val prev = activity.supportFragmentManager.findFragmentByTag("dialog")
+                if (prev != null) {
+                    fragmentTransaction.remove(prev)
+                }
+                fragmentTransaction.addToBackStack(null)
+                val fragment = StockDetailDialogFragment() //here MyDialog is my custom dialog
+                val bundle = Bundle()
+                bundle.putString("selected_symbol", quotesList[layoutPosition].symbol)
+                fragment.arguments = bundle
+
+                fragment.show(fragmentTransaction, "dialog")
             }
         }
 

@@ -17,27 +17,22 @@ class WatchlistViewModel : ViewModel() {
 
     val state = MutableLiveData<State>()
     val error = MutableLiveData<String>()
-    val quotesLiveData = MutableLiveData<LinkedHashMap<String, Quote>>()
+
     val watchlist = ArrayList<String>()
 
     private val quotesMap = LinkedHashMap<String, Quote>()
-    private val fetchQuotesJob = fetchQuotesJob()
+    val quotesMapLiveData = MutableLiveData<LinkedHashMap<String, Quote>>()
 
     val searchResults = ArrayList<Item>()
     val searchResultsLiveData = MutableLiveData<ArrayList<Item>>()
 
-    //var searchJob: Job? = null
+    private val fetchQuotesJob = fetchQuotesJob()
 
     init {
         state.postValue(State.Loading)
         watchlist.add("AAPL")
         watchlist.add("MSFT")
         watchlist.add("GOOG")
-/*
-        watchlist.add("AAC")
-        watchlist.add("AAN")
-*/
-
         fetchQuotesJob.start()
     }
 
@@ -51,7 +46,7 @@ class WatchlistViewModel : ViewModel() {
                 //Wait for all calls to return
                 apiCalls.awaitAll()
                 state.postValue(State.Done)
-                quotesLiveData.postValue(quotesMap)
+                quotesMapLiveData.postValue(quotesMap)
 
                 delay(5000)
             }
@@ -95,7 +90,6 @@ class WatchlistViewModel : ViewModel() {
             }
         }
     }
-
 
 
     private fun handleFailure(resource: Resource<Any>) {
