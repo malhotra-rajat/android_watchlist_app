@@ -8,7 +8,7 @@ import com.example.watchlist.feature.watchlist.domain.HistoricalPriceItem
 import com.example.watchlist.feature.watchlist.network.IEXApi
 import java.lang.Exception
 
-class IEXRepository() {
+class IEXRepository {
 
     private val responseHandler = ResponseHandler()
 

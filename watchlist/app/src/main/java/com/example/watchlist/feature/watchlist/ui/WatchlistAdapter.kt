@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.watchlist.R
 import com.example.watchlist.databinding.WatchlistItemBinding
 import com.example.watchlist.feature.watchlist.datamodels.Quote
-import com.example.watchlist.feature.watchlist.ui.StockDetailDialogFragment
 
 class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
     RecyclerView.Adapter<WatchlistAdapter.WatchlistItemViewHolder>() {

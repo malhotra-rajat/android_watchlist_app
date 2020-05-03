@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 
 fun showAddWatchlistDialog(context: Context, viewModel: WatchlistViewModel) {
     val dialogBuilder = AlertDialog.Builder(context)
-    val dialogView = View.inflate(context, R.layout.dialog_add_watchlist, null);
+    val dialogView = View.inflate(context, R.layout.dialog_add_watchlist, null)
     dialogBuilder.setView(dialogView)
 
     val etWatchlistName = dialogView.findViewById<EditText>(R.id.et_watchlist_name)
@@ -67,7 +67,7 @@ fun showAddSymbolDialog(
     adapter: AutoSuggestAdapter
 ) {
     val dialogBuilder = AlertDialog.Builder(context)
-    val dialogView = View.inflate(context, R.layout.dialog_add_symbol, null);
+    val dialogView = View.inflate(context, R.layout.dialog_add_symbol, null)
     dialogBuilder.setView(dialogView)
 
     var searchJob: Job? = null

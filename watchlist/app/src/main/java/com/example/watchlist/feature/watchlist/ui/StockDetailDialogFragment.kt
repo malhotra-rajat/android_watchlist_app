@@ -61,7 +61,7 @@ class StockDetailDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val selectedSymbol = arguments?.getString(SELECTED_SYMBOL);
+        val selectedSymbol = arguments?.getString(SELECTED_SYMBOL)
 
         mBinding.lifecycleOwner = this
         mBinding.viewModel = viewModel
@@ -76,8 +76,8 @@ class StockDetailDialogFragment : DialogFragment() {
             }
         }
 
-        stock_chart.setTouchEnabled(true);
-        stock_chart.setPinchZoom(true);
+        stock_chart.setTouchEnabled(true)
+        stock_chart.setPinchZoom(true)
 
         viewModel.chartEntriesLiveData.observe(this, Observer {
             val lineDataSet = LineDataSet(it, "")

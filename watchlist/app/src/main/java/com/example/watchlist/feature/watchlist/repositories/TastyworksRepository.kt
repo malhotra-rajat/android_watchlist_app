@@ -6,7 +6,7 @@ import com.example.watchlist.common.network.ResponseHandler
 import com.example.watchlist.feature.watchlist.datamodels.SymbolSearchResponse
 import com.example.watchlist.feature.watchlist.network.TastyworksApi
 
-class TastyworksRepository() {
+class TastyworksRepository {
 
     private val responseHandler = ResponseHandler()
 

@@ -10,12 +10,12 @@ object NetworkManager {
     private const val TASTYWORKS_BASE_URL = "https://api.tastyworks.com"
     private const val IEX_CLOUD_BASE_URL = "https://cloud.iexapis.com"
 
-    const val iexAuthToken = "sk_e9b48de93a884fb58539fb87e1eea738"
+    private const val iexAuthToken = "sk_e9b48de93a884fb58539fb87e1eea738"
 
     private val gsonFactory = GsonConverterFactory.create()
     private val twOkHttpClient = OkHttpClient()
 
-    var iexOkHttpClient: OkHttpClient =
+    private var iexOkHttpClient: OkHttpClient =
         OkHttpClient().newBuilder().addInterceptor { chain ->
             val original = chain.request()
             val originalHttpUrl = original.url()
@@ -31,7 +31,7 @@ object NetworkManager {
             chain.proceed(request)
         }.build()
 
-    var tastyWorksClient = Retrofit.Builder()
+    var tastyWorksClient: Retrofit = Retrofit.Builder()
         .baseUrl(TASTYWORKS_BASE_URL)
         .client(twOkHttpClient)
         .addConverterFactory(gsonFactory)

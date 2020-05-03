@@ -21,7 +21,6 @@ import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.*
 
 class WatchlistViewModel(application: Application) : AndroidViewModel(application) {
-    private val TAG = this::class.java.simpleName
 
     //loading states variables
     val watchlistLoadingState = MutableLiveData<State>()
@@ -84,7 +83,6 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 )
             }
             message.postValue("Initial watchlist added")
-            //selectedWatchlistId = watchlist.id
         }
     }
 
@@ -168,7 +166,7 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun clearQuotes() {
+    private fun clearQuotes() {
         quotesMap.clear()
         quotesMapLiveData.postValue(quotesMap)
     }

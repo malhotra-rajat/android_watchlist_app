@@ -111,8 +111,8 @@ class WatchlistActivity : AppCompatActivity() {
         viewModel.quotesMapLiveData.observe(this, watchListObserver)
 
         viewModel.searchResultsLiveData.observe(this, Observer { items ->
-            autoSuggestAdapter.setData(items.map { it.symbol.toString() });
-            autoSuggestAdapter.notifyDataSetChanged();
+            autoSuggestAdapter.setData(items.map { it.symbol.toString() })
+            autoSuggestAdapter.notifyDataSetChanged()
         })
 
 
