@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.example.watchlist.R
-import com.example.watchlist.feature.datamodels.db.Watchlist
+import com.example.watchlist.feature.watchlist.db.Watchlist
 
 
 class WatchlistSpinnerAdapter(context: Context, resource: Int) :

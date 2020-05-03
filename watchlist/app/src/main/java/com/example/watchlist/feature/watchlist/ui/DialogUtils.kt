@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui
+package com.example.watchlist.feature.watchlist.ui
 
 import android.app.AlertDialog
 import android.content.Context
@@ -10,10 +10,8 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.example.watchlist.R
-import com.example.watchlist.feature.datamodels.db.Symbol
-import com.example.watchlist.feature.datamodels.db.Watchlist
-import com.example.watchlist.feature.ui.watchlist.AutoSuggestAdapter
-import com.example.watchlist.feature.ui.watchlist.WatchlistViewModel
+import com.example.watchlist.feature.watchlist.db.Symbol
+import com.example.watchlist.feature.watchlist.db.Watchlist
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -29,7 +27,11 @@ fun showAddWatchlistDialog(context: Context, viewModel: WatchlistViewModel) {
     dialogBuilder.setPositiveButton(
         "Add"
     ) { _, _ ->
-        viewModel.addWatchlist(Watchlist(watchlistName = etWatchlistName.text.toString()))
+        viewModel.addWatchlist(
+            Watchlist(
+                watchlistName = etWatchlistName.text.toString()
+            )
+        )
     }
 
     dialogBuilder.setNegativeButton("Cancel") { _, _ -> }
@@ -79,11 +81,11 @@ fun showAddSymbolDialog(
     dialogBuilder.setPositiveButton("Add Symbol to watchlist") { _, _ ->
         selectedSymbol?.let {
             if (it.isNotEmpty()) {
-                val symbol =
-                    viewModel.selectedWatchlistId?.let { wId -> Symbol(name = it, watchlistId = wId) }
-                if (symbol != null) {
-                    viewModel.addSymbolToWatchList(symbol)
-                }
+                val symbol = Symbol(
+                    name = it,
+                    watchlistId = 0
+                )
+                viewModel.addSymbolToWatchList(symbol)
             }
         }
     }

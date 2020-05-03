@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 import android.content.Context
 import android.widget.ArrayAdapter

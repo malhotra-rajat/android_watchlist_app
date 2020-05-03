@@ -1,10 +1,8 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,18 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchlist.R
 import com.example.watchlist.common.ui.State
 import com.example.watchlist.databinding.ActivityWatchlistBinding
-import com.example.watchlist.feature.datamodels.api.Quote
-import com.example.watchlist.feature.datamodels.db.Watchlist
-import com.example.watchlist.feature.ui.showAddSymbolDialog
-import com.example.watchlist.feature.ui.showAddWatchlistDialog
+import com.example.watchlist.feature.watchlist.datamodels.Quote
+import com.example.watchlist.feature.watchlist.db.Watchlist
 import kotlinx.android.synthetic.main.activity_watchlist.*
 
-class WatchlistActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class WatchlistActivity : AppCompatActivity() {
 
     private val viewModel: WatchlistViewModel by viewModels()
 
     private val watchlistAdapter by lazy {
-        return@lazy WatchlistAdapter(viewModel)
+        return@lazy WatchlistAdapter(
+            viewModel
+        )
     }
 
     private val mBinding by lazy {
@@ -45,7 +43,10 @@ class WatchlistActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
     }
 
     private val watchlistSpinnerAdapter by lazy {
-        return@lazy WatchlistSpinnerAdapter(this, R.layout.support_simple_spinner_dropdown_item)
+        return@lazy WatchlistSpinnerAdapter(
+            this,
+            R.layout.support_simple_spinner_dropdown_item
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,8 +71,6 @@ class WatchlistActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
             adapter = watchlistAdapter
             addItemDecoration(dividerItemDecoration)
         }
-
-        spinner_watchlist.onItemSelectedListener = this
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,27 +130,20 @@ class WatchlistActivity : AppCompatActivity(), AdapterView.OnItemSelectedListene
             watchlistSpinnerAdapter.updateData(it as ArrayList<Watchlist>)
          })
 
-        viewModel.symbolsForSelectedWatchlist.observe(this, Observer {
-            if (it.isNotEmpty()) {
-                //viewModel.message.postValue("Symbols for watchlist loaded")
-                viewModel.startFetchingQuotes()
+        viewModel.currentSymbolsLiveData.observe(this, Observer { symbolList ->
+            if (symbolList.isNotEmpty()) {
+                for (symbol in symbolList) {
+                    viewModel.currentSymbolsMap[symbol.name] = symbol.id
+                }
+//                viewModel.clearQuotes()
+                val symbolStrings = symbolList.map { it.name } as ArrayList<String>
+                viewModel.startQuoteFetchJob(symbolStrings)
             }
             else {
                 viewModel.stopFetchingQuotes()
                 viewModel.message.postValue("No symbols for selected watchlist")
+                viewModel.watchlistLoadingState.postValue(State.Done)
             }
         })
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val watchlist = watchlistSpinnerAdapter.getItem(spinner_watchlist.selectedItemPosition)
-        watchlist?.id?.let {
-            viewModel.selectedWatchlistId = it
-            viewModel.updateCurrentSymbols(it)
-        }
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-
     }
 }

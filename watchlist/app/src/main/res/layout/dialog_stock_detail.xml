@@ -14,11 +14,11 @@
 
         <variable
             name="quote"
-            type="com.example.watchlist.feature.datamodels.api.Quote" />
+            type="com.example.watchlist.feature.watchlist.datamodels.Quote" />
 
         <variable
             name="viewModel"
-            type="com.example.watchlist.feature.ui.watchlist.WatchlistViewModel" />
+            type="com.example.watchlist.feature.watchlist.ui.WatchlistViewModel" />
 
 
     </data>

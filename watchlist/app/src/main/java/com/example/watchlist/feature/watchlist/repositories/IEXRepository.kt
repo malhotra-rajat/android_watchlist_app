@@ -1,11 +1,11 @@
-package com.example.watchlist.feature.repositories
+package com.example.watchlist.feature.watchlist.repositories
 
 import com.example.watchlist.common.network.NetworkManager
 import com.example.watchlist.common.network.Resource
 import com.example.watchlist.common.network.ResponseHandler
-import com.example.watchlist.feature.datamodels.api.Quote
-import com.example.watchlist.feature.domain.HistoricalPriceItem
-import com.example.watchlist.feature.network.IEXApi
+import com.example.watchlist.feature.watchlist.datamodels.Quote
+import com.example.watchlist.feature.watchlist.domain.HistoricalPriceItem
+import com.example.watchlist.feature.watchlist.network.IEXApi
 import java.lang.Exception
 
 class IEXRepository() {

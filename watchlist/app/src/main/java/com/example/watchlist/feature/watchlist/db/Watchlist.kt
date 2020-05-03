@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.datamodels.db
+package com.example.watchlist.feature.watchlist.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

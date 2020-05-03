@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.watchlist.feature.ui.watchlist.WatchlistViewModel" />
+            type="com.example.watchlist.feature.watchlist.ui.WatchlistViewModel" />
 
         <variable
             name="spinnerAdapter"
@@ -23,7 +23,7 @@
         android:id="@+id/layout_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.ui.watchlist.WatchlistActivity">
+        tools:context=".feature.watchlist.ui.WatchlistActivity">
 
         <ProgressBar
             android:id="@+id/progress_bar"

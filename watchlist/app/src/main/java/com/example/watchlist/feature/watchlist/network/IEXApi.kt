@@ -1,7 +1,7 @@
-package com.example.watchlist.feature.network
+package com.example.watchlist.feature.watchlist.network
 
-import com.example.watchlist.feature.datamodels.api.HistoricalPrice
-import com.example.watchlist.feature.datamodels.api.Quote
+import com.example.watchlist.feature.watchlist.datamodels.HistoricalPrice
+import com.example.watchlist.feature.watchlist.datamodels.Quote
 import retrofit2.http.GET
 import retrofit2.http.Path
 

@@ -1,7 +1,6 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 import android.app.AlertDialog
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.watchlist.R
 import com.example.watchlist.databinding.WatchlistItemBinding
-import com.example.watchlist.feature.datamodels.api.Quote
-import com.example.watchlist.feature.datamodels.db.Symbol
+import com.example.watchlist.feature.watchlist.datamodels.Quote
+import com.example.watchlist.feature.watchlist.ui.StockDetailDialogFragment
 
 class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
     RecyclerView.Adapter<WatchlistAdapter.WatchlistItemViewHolder>() {
@@ -52,22 +51,34 @@ class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
         }
 
         override fun onClick(v: View?) {
-            val fragmentManager = (mBinding.root.context as AppCompatActivity).supportFragmentManager
+           showStockDetailDialog()
+        }
+
+        override fun onLongClick(v: View?): Boolean {
+            showDeleteSymbolDialog(v)
+            return true
+        }
+
+        private fun showStockDetailDialog() {
+            val fragmentManager =
+                (mBinding.root.context as AppCompatActivity).supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val prev = fragmentManager.findFragmentByTag("dialog")
             if (prev != null) {
                 fragmentTransaction.remove(prev)
             }
             fragmentTransaction.addToBackStack(null)
-            val fragment = StockDetailDialogFragment()
-            val bundle = Bundle()
-            bundle.putString("selected_symbol", quotesList[layoutPosition].symbol)
-            fragment.arguments = bundle
 
-            fragment.show(fragmentTransaction, "dialog")
+            val stockDetailDialogFragment = quotesList[layoutPosition].symbol?.let {
+                StockDetailDialogFragment()
+                    .newInstance(
+                    it
+                )
+            }
+            stockDetailDialogFragment?.show(fragmentTransaction, "dialog")
         }
 
-        override fun onLongClick(v: View?): Boolean {
+        private fun showDeleteSymbolDialog(v: View?) {
             val dialogBuilder = AlertDialog.Builder(v?.context)
 
             dialogBuilder.setTitle("Delete symbol from watchlist? ")
@@ -76,24 +87,21 @@ class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
             dialogBuilder.setPositiveButton(
                 "Ok"
             ) { _, _ ->
-                layoutPosition.let {
-                    quotesList[it].symbol?.let {
-                        val symbol = watchlistViewModel.selectedWatchlistId?.let {
-                                wId -> Symbol(name = it, watchlistId = wId)
-                        }
-                        if (symbol != null) {
-                            watchlistViewModel.removeSymbolFromWatchList(symbol)
+                layoutPosition.let { layoutPosition ->
+                    quotesList[layoutPosition].symbol?.let {
+                        val symbolId = watchlistViewModel.currentSymbolsMap[quotesList[layoutPosition].symbol]
+                        if (symbolId != null) {
+                            watchlistViewModel.removeSymbolFromWatchList(symbolId)
                         }
                     }
-                    notifyItemRemoved(it)
-                    quotesList.removeAt(it)
+                    notifyItemRemoved(layoutPosition)
+                    quotesList.removeAt(layoutPosition)
                 }
 
             }
             dialogBuilder.setNegativeButton("Cancel") { _, _ -> }
             val dialog = dialogBuilder.create()
             dialog.show()
-            return true
         }
     }
 }

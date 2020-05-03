@@ -1,20 +1,22 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.watchlist.common.network.Resource
 import com.example.watchlist.common.network.ResponseStatus
 import com.example.watchlist.common.ui.State
-import com.example.watchlist.feature.datamodels.api.Item
-import com.example.watchlist.feature.datamodels.api.Quote
-import com.example.watchlist.feature.datamodels.db.Symbol
-import com.example.watchlist.feature.datamodels.db.Watchlist
-import com.example.watchlist.feature.db.WatchlistDatabase
-import com.example.watchlist.feature.domain.HistoricalPriceItem
-import com.example.watchlist.feature.repositories.*
+import com.example.watchlist.feature.watchlist.datamodels.Item
+import com.example.watchlist.feature.watchlist.datamodels.Quote
+import com.example.watchlist.feature.watchlist.db.Symbol
+import com.example.watchlist.feature.watchlist.db.Watchlist
+import com.example.watchlist.feature.watchlist.db.WatchlistDatabase
+import com.example.watchlist.feature.watchlist.domain.HistoricalPriceItem
+import com.example.watchlist.feature.watchlist.repositories.IEXRepository
+import com.example.watchlist.feature.watchlist.repositories.SymbolRepository
+import com.example.watchlist.feature.watchlist.repositories.TastyworksRepository
+import com.example.watchlist.feature.watchlist.repositories.WatchlistRepository
 import com.github.mikephil.charting.data.Entry
 import kotlinx.coroutines.*
 
@@ -44,17 +46,19 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     private val symbolDao = WatchlistDatabase.getDatabase(application).symbolDao()
     private val symbolRepository = SymbolRepository(symbolDao)
 
+    //db LiveData objects
+    var allWatchlists = watchlistRepository.getAll()
+    var currentSymbolsLiveData = symbolRepository.getSymbolsForWatchlist(0)
 
-    var allWatchlists: LiveData<List<Watchlist>> = watchlistRepository.getAll()
-    var selectedWatchlistId: Long? = null
-    //var symbolsForSelectedWatchlist: LiveData<List<Symbol>>? = null
-
-    var symbolsForSelectedWatchlist = MutableLiveData<List<Symbol>>()
+    var currentSymbolsMap = mutableMapOf<String, Long>()
 
     private var fetchQuotesJob: Job? = null
 
-    fun startFetchingQuotes() {
-        fetchQuotesJob = getQuotesJob()
+    fun startQuoteFetchJob(symbolStrings: ArrayList<String>) {
+        clearQuotes()
+        watchlistLoadingState.postValue(State.Loading)
+        stopFetchingQuotes()
+        fetchQuotesJob = getQuotesJob(symbolStrings)
     }
 
     fun stopFetchingQuotes() {
@@ -63,30 +67,24 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun addInitialWatchlist() {
         viewModelScope.launch(Dispatchers.IO) {
-
-            watchlistLoadingState.postValue(State.Loading)
-            val watchlist = Watchlist(watchlistName = "My first list")
+            val watchlist = Watchlist(
+                0,
+                watchlistName = "My first list"
+            )
             addWatchlist(watchlist)
 
             val symbols = mutableListOf("AAPL", "MSFT", "GOOG")
 
             symbols.forEach {
-                addSymbolToWatchList(Symbol(name = it, watchlistId = watchlist.id))
+                addSymbolToWatchList(
+                    Symbol(
+                        name = it,
+                        watchlistId = watchlist.id
+                    )
+                )
             }
             message.postValue("Initial watchlist added")
-
-        }
-    }
-
-    fun updateCurrentSymbols(watchlistId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            watchlistLoadingState.postValue(State.Loading)
-            symbolsForSelectedWatchlist.postValue(
-                symbolRepository.getSymbolsForWatchlist(
-                    watchlistId
-                )
-            )
-            //symbolsForSelectedWatchlist = symbolRepository.getAll()
+            //selectedWatchlistId = watchlist.id
         }
     }
 
@@ -100,42 +98,36 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
 
-    fun removeSymbolFromWatchList(symbol: Symbol) {
+    fun removeSymbolFromWatchList(symbolId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            watchlistLoadingState.postValue(State.Loading)
-            val msg = symbolRepository.delete(symbol)
-            message.postValue("${symbol.name} removed: $msg")
-            selectedWatchlistId?.let { updateCurrentSymbols(it) }
-
+            symbolRepository.deleteById(symbolId)
+            //message.postValue("${symbol.name} removed")
         }
-
     }
 
     fun addSymbolToWatchList(symbol: Symbol) {
         viewModelScope.launch(Dispatchers.IO) {
-            watchlistLoadingState.postValue(State.Loading)
-            val msg = symbolRepository.insert(symbol)
-            message.postValue("${symbol.name} added: $msg")
-            selectedWatchlistId?.let { updateCurrentSymbols(it) }
+            symbolRepository.insert(symbol)
+            message.postValue("${symbol.name} added")
         }
     }
 
 
-    private fun getQuotesJob(): Job {
+    private fun getQuotesJob(symbolStrings: ArrayList<String>): Job {
         return viewModelScope.launch(Dispatchers.IO) {
-            //  while (isActive) {
-            val apiCalls = mutableListOf<Deferred<Unit>>()
+            while (isActive) {
+                val apiCalls = mutableListOf<Deferred<Unit>>()
 
-            symbolsForSelectedWatchlist.value?.map { it.name }?.forEach {
-                apiCalls.add(async { getQuote(it) })
+                symbolStrings.forEach {
+                    apiCalls.add(async { getQuote(it) })
+                }
+                //Wait for all calls to return
+                apiCalls.awaitAll()
+                watchlistLoadingState.postValue(State.Done)
+                quotesMapLiveData.postValue(quotesMap)
+
+                delay(5000)
             }
-            //Wait for all calls to return
-            apiCalls.awaitAll()
-            watchlistLoadingState.postValue(State.Done)
-            quotesMapLiveData.postValue(quotesMap)
-
-            //    delay(5)
-            // }
         }
     }
 
@@ -174,6 +166,11 @@ class WatchlistViewModel(application: Application) : AndroidViewModel(applicatio
                 }
             }
         }
+    }
+
+    fun clearQuotes() {
+        quotesMap.clear()
+        quotesMapLiveData.postValue(quotesMap)
     }
 
 

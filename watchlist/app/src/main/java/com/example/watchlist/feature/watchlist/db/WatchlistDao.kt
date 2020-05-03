@@ -1,8 +1,7 @@
-package com.example.watchlist.feature.domain.dao
+package com.example.watchlist.feature.watchlist.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.watchlist.feature.datamodels.db.Watchlist
 
 @Dao
 interface WatchlistDao {

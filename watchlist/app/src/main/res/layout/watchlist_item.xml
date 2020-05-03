@@ -10,7 +10,7 @@
 
         <variable
             name="quote"
-            type="com.example.watchlist.feature.datamodels.api.Quote" />
+            type="com.example.watchlist.feature.watchlist.datamodels.Quote" />
 
     </data>
 
@@ -26,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{quote.symbol}"
-            android:visibility="@{quote.symbol != null ? View.VISIBLE : View.GONE}"
             android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +36,6 @@
             android:id="@+id/bid_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{quote.iexAskPrice != null ? View.VISIBLE : View.GONE}"
             android:text="@{`Bid Price: $` + quote.iexBidPrice}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stock_symbol"
@@ -48,7 +46,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{`Ask Price: $` + quote.iexAskPrice}"
-            android:visibility="@{quote.iexAskPrice != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bid_price"
             tools:text="Ask price: $222.22" />
@@ -58,7 +55,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{`Latest Price: $` + quote.latestPrice}"
-            android:visibility="@{quote.latestPrice != null ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ask_price"
             tools:text="Latest price: $222.22" />

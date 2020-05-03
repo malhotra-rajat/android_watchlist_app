@@ -1,10 +1,10 @@
-package com.example.watchlist.feature.repositories
+package com.example.watchlist.feature.watchlist.repositories
 
 import com.example.watchlist.common.network.NetworkManager
 import com.example.watchlist.common.network.Resource
 import com.example.watchlist.common.network.ResponseHandler
-import com.example.watchlist.feature.datamodels.api.SymbolSearchResponse
-import com.example.watchlist.feature.network.TastyworksApi
+import com.example.watchlist.feature.watchlist.datamodels.SymbolSearchResponse
+import com.example.watchlist.feature.watchlist.network.TastyworksApi
 
 class TastyworksRepository() {
 

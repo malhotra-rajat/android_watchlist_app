@@ -1,13 +1,9 @@
-package com.example.watchlist.feature.db
+package com.example.watchlist.feature.watchlist.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.watchlist.feature.datamodels.db.Symbol
-import com.example.watchlist.feature.datamodels.db.Watchlist
-import com.example.watchlist.feature.domain.dao.SymbolDao
-import com.example.watchlist.feature.domain.dao.WatchlistDao
 
 @Database(entities = [Watchlist::class, Symbol::class], version = 1, exportSchema = false)
 abstract class WatchlistDatabase : RoomDatabase() {

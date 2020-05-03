@@ -1,6 +1,6 @@
-package com.example.watchlist.feature.network
+package com.example.watchlist.feature.watchlist.network
 
-import com.example.watchlist.feature.datamodels.api.SymbolSearchResponse
+import com.example.watchlist.feature.watchlist.datamodels.SymbolSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 

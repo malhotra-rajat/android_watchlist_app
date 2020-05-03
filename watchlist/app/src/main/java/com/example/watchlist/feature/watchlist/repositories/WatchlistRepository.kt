@@ -1,8 +1,8 @@
-package com.example.watchlist.feature.repositories
+package com.example.watchlist.feature.watchlist.repositories
 
 import androidx.lifecycle.LiveData
-import com.example.watchlist.feature.datamodels.db.Watchlist
-import com.example.watchlist.feature.domain.dao.WatchlistDao
+import com.example.watchlist.feature.watchlist.db.Watchlist
+import com.example.watchlist.feature.watchlist.db.WatchlistDao
 
 class WatchlistRepository(private val watchlistDao: WatchlistDao) {
 

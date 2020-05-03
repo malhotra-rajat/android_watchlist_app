@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.ui.watchlist
+package com.example.watchlist.feature.watchlist.ui
 
 
 import android.os.Bundle
@@ -30,6 +30,17 @@ class StockDetailDialogFragment : DialogFragment() {
 
     private val viewModel: WatchlistViewModel by activityViewModels()
 
+    fun newInstance(selectedSymbol: String): StockDetailDialogFragment? {
+        val f =
+            StockDetailDialogFragment()
+
+        val args = Bundle()
+        args.putString(SELECTED_SYMBOL, selectedSymbol)
+        f.arguments = args
+
+        return f
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,14 +58,13 @@ class StockDetailDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val selectedSymbol = arguments?.getString(SELECTED_SYMBOL);
 
         mBinding.lifecycleOwner = this
         mBinding.viewModel = viewModel
-
-        val bundle = this.arguments
-        val selectedSymbol = bundle?.getString("selected_symbol")
 
         viewModel.quotesMapLiveData.observe(this, Observer {
             mBinding.quote = it[selectedSymbol]
@@ -72,14 +82,15 @@ class StockDetailDialogFragment : DialogFragment() {
         viewModel.chartEntriesLiveData.observe(this, Observer {
             val lineDataSet = LineDataSet(it, "")
             lineDataSet.color = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-            lineDataSet.valueTextColor = ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark)
+            lineDataSet.valueTextColor =
+                ContextCompat.getColor(requireActivity(), R.color.colorPrimaryDark)
             val xAxis: XAxis = stock_chart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             val formatter = object : ValueFormatter() {
-                    override fun getAxisLabel(value: Float, axis: AxisBase): String {
-                        return viewModel.chartDates[value.toInt()]
-                    }
+                override fun getAxisLabel(value: Float, axis: AxisBase): String {
+                    return viewModel.chartDates[value.toInt()]
                 }
+            }
             xAxis.granularity = 1f
             xAxis.valueFormatter = formatter
             xAxis.labelRotationAngle = -45f
@@ -95,5 +106,9 @@ class StockDetailDialogFragment : DialogFragment() {
             stock_chart.animateX(500)
             stock_chart.invalidate()
         })
+    }
+
+    companion object {
+        private const val SELECTED_SYMBOL = "selected_symbol"
     }
 }

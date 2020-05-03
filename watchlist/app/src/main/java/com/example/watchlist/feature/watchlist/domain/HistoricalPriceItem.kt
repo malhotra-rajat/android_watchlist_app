@@ -1,6 +1,6 @@
-package com.example.watchlist.feature.domain
+package com.example.watchlist.feature.watchlist.domain
 
-import com.example.watchlist.feature.datamodels.api.HistoricalPrice
+import com.example.watchlist.feature.watchlist.datamodels.HistoricalPrice
 
 class HistoricalPriceItem (private val historicalPrice: HistoricalPrice) {
     val date = historicalPrice.date

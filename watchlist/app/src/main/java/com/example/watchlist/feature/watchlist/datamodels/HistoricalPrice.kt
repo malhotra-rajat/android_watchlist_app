@@ -1,4 +1,4 @@
-package com.example.watchlist.feature.datamodels.api
+package com.example.watchlist.feature.watchlist.datamodels
 
 data class HistoricalPrice (
     val date: String? = null,
