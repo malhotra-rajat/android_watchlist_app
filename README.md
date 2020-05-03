@@ -1,12 +1,11 @@
 # watchlist_app
 
-An Android app for managing watchlists.   
+An Android app for managing watchlists.    
 
-Setup: 
+Setup:  
 -> Clone the repo and run in Android Studio       
 
-Usage:       
-
+Usage:  
 -> When the app first starts up, a default watchlist "My first list" is populated in the database. It contains the symbols: AAPL, MSFT and GOOG     
 -> The list shows the following data points: Stock Symbol, Bid Price, Ask Price and Last Price which are refreshed every 5 seconds    
 -> When you click on an item in the list, a stock price history chart is shown along with the above data which is refreshed every 5 seconds as well    
