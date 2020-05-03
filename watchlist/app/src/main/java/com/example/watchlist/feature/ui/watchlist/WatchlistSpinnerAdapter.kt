@@ -36,9 +36,9 @@ class WatchlistSpinnerAdapter(context: Context, resource: Int) :
     private fun getWatchlistItemView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_watchlist_item, parent, false)
         if (mWatchlists.isNotEmpty()) {
-            val word = getItem(position)
+            val watchlist = getItem(position)
             val tvWatchlist = view.findViewById(R.id.tv_watchlist) as TextView
-            tvWatchlist.text = word?.watchlistName
+            tvWatchlist.text = watchlist?.watchlistName
 
         }
         return view

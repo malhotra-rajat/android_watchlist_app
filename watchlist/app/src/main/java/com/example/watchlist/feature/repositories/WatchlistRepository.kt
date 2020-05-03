@@ -6,7 +6,9 @@ import com.example.watchlist.feature.domain.dao.WatchlistDao
 
 class WatchlistRepository(private val watchlistDao: WatchlistDao) {
 
-    val allWatchlists: LiveData<List<Watchlist>> = watchlistDao.getAll()
+    fun getAll(): LiveData<List<Watchlist>> {
+        return watchlistDao.getAll()
+    }
 
     suspend fun insert(watchlist: Watchlist) {
         watchlistDao.insert(watchlist)

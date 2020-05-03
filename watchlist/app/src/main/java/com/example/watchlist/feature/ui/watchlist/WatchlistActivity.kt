@@ -3,6 +3,8 @@ package com.example.watchlist.feature.ui.watchlist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.watchlist.R
+import com.example.watchlist.common.ui.State
 import com.example.watchlist.databinding.ActivityWatchlistBinding
 import com.example.watchlist.feature.datamodels.api.Quote
 import com.example.watchlist.feature.datamodels.db.Watchlist
@@ -18,7 +21,7 @@ import com.example.watchlist.feature.ui.showAddSymbolDialog
 import com.example.watchlist.feature.ui.showAddWatchlistDialog
 import kotlinx.android.synthetic.main.activity_watchlist.*
 
-class WatchlistActivity : AppCompatActivity() {
+class WatchlistActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val viewModel: WatchlistViewModel by viewModels()
 
@@ -68,7 +71,7 @@ class WatchlistActivity : AppCompatActivity() {
             addItemDecoration(dividerItemDecoration)
         }
 
-
+        spinner_watchlist.onItemSelectedListener = this
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,9 +87,14 @@ class WatchlistActivity : AppCompatActivity() {
             }
 
             R.id.action_delete_watchlist -> {
-                val watchlist =
-                    watchlistSpinnerAdapter.getItem(spinner_watchlist.selectedItemPosition)
-                watchlist?.let { viewModel.deleteWatchlist(it) }
+                if (viewModel.allWatchlists.value?.size == 1) {
+                    viewModel.message.postValue("You can't delete all watchlists")
+                }
+                else {
+                    val watchlist =
+                        watchlistSpinnerAdapter.getItem(spinner_watchlist.selectedItemPosition)
+                    watchlist?.let { viewModel.deleteWatchlist(it) }
+                }
                 true
             }
 
@@ -109,13 +117,41 @@ class WatchlistActivity : AppCompatActivity() {
         })
 
 
-        viewModel.error.observe(this, Observer {
+        viewModel.message.observe(this, Observer {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
         })
 
         mBinding.spinnerAdapter = watchlistSpinnerAdapter
-        viewModel.watchlists.observe(this, Observer {
+
+        viewModel.allWatchlists.observe(this, Observer {
+            if (it.isEmpty()) {
+                viewModel.addInitialWatchlist()
+            }
+
             watchlistSpinnerAdapter.updateData(it as ArrayList<Watchlist>)
+         })
+
+        viewModel.symbolsForSelectedWatchlist.observe(this, Observer {
+            if (it.isNotEmpty()) {
+                //viewModel.message.postValue("Symbols for watchlist loaded")
+                viewModel.startFetchingQuotes()
+            }
+            else {
+                viewModel.stopFetchingQuotes()
+                viewModel.message.postValue("No symbols for selected watchlist")
+            }
         })
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val watchlist = watchlistSpinnerAdapter.getItem(spinner_watchlist.selectedItemPosition)
+        watchlist?.id?.let {
+            viewModel.selectedWatchlistId = it
+            viewModel.updateCurrentSymbols(it)
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
     }
 }

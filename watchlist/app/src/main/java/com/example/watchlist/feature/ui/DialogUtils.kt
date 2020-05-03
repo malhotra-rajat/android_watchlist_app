@@ -10,6 +10,7 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.example.watchlist.R
+import com.example.watchlist.feature.datamodels.db.Symbol
 import com.example.watchlist.feature.datamodels.db.Watchlist
 import com.example.watchlist.feature.ui.watchlist.AutoSuggestAdapter
 import com.example.watchlist.feature.ui.watchlist.WatchlistViewModel
@@ -78,7 +79,11 @@ fun showAddSymbolDialog(
     dialogBuilder.setPositiveButton("Add Symbol to watchlist") { _, _ ->
         selectedSymbol?.let {
             if (it.isNotEmpty()) {
-                viewModel.addSymbolToWatchList(it)
+                val symbol =
+                    viewModel.selectedWatchlistId?.let { wId -> Symbol(name = it, watchlistId = wId) }
+                if (symbol != null) {
+                    viewModel.addSymbolToWatchList(symbol)
+                }
             }
         }
     }

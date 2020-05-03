@@ -1,15 +1,12 @@
 package com.example.watchlist.feature.domain.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.watchlist.feature.datamodels.db.Watchlist
 
 @Dao
 interface WatchlistDao {
-    @Query("SELECT * FROM watchlist")
+    @Query("SELECT * FROM Watchlist")
     fun getAll(): LiveData<List<Watchlist>>
 
     @Insert

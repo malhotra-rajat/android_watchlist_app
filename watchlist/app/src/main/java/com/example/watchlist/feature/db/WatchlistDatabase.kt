@@ -6,12 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.watchlist.feature.datamodels.db.Symbol
 import com.example.watchlist.feature.datamodels.db.Watchlist
+import com.example.watchlist.feature.domain.dao.SymbolDao
 import com.example.watchlist.feature.domain.dao.WatchlistDao
 
 @Database(entities = [Watchlist::class, Symbol::class], version = 1, exportSchema = false)
 abstract class WatchlistDatabase : RoomDatabase() {
 
     abstract fun watchlistDao(): WatchlistDao
+    abstract fun symbolDao(): SymbolDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the

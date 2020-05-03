@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.watchlist.R
 import com.example.watchlist.databinding.WatchlistItemBinding
 import com.example.watchlist.feature.datamodels.api.Quote
+import com.example.watchlist.feature.datamodels.db.Symbol
 
 class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
     RecyclerView.Adapter<WatchlistAdapter.WatchlistItemViewHolder>() {
@@ -58,7 +59,7 @@ class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
                 fragmentTransaction.remove(prev)
             }
             fragmentTransaction.addToBackStack(null)
-            val fragment = StockDetailDialogFragment() //here MyDialog is my custom dialog
+            val fragment = StockDetailDialogFragment()
             val bundle = Bundle()
             bundle.putString("selected_symbol", quotesList[layoutPosition].symbol)
             fragment.arguments = bundle
@@ -76,9 +77,16 @@ class WatchlistAdapter(val watchlistViewModel: WatchlistViewModel) :
                 "Ok"
             ) { _, _ ->
                 layoutPosition.let {
-                    quotesList.removeAt(it)
-                    quotesList[it].symbol?.let { symbol -> watchlistViewModel.removeSymbolFromWatchList(symbol) }
+                    quotesList[it].symbol?.let {
+                        val symbol = watchlistViewModel.selectedWatchlistId?.let {
+                                wId -> Symbol(name = it, watchlistId = wId)
+                        }
+                        if (symbol != null) {
+                            watchlistViewModel.removeSymbolFromWatchList(symbol)
+                        }
+                    }
                     notifyItemRemoved(it)
+                    quotesList.removeAt(it)
                 }
 
             }

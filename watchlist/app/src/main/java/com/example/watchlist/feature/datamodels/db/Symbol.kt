@@ -1,11 +1,11 @@
 package com.example.watchlist.feature.datamodels.db
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
 @Entity
 data class Symbol(
-    @PrimaryKey (autoGenerate = true) val sid: Int,
-    @ColumnInfo(name = "symbol") val symbol: String
+    @PrimaryKey (autoGenerate = true) val id: Long = 0,
+    val name: String,
+    val watchlistId: Long
 )
