@@ -1,6 +1,8 @@
 # Watchlists
 
-An Android app for managing watchlists.    
+An Android app for managing watchlists.
+
+* The app is created using MVVM pattern, Android Architecture Components, Room, Kotlin coroutines and Retrofit.
 
 **Usage:**  
 * When the app first starts up, a default watchlist "My first list" is populated in the database. It contains the symbols: AAPL, MSFT and GOOG  
